@@ -1,9 +1,9 @@
 <?php 
-	return array(
-		'connectionString' => '{imap.yandex.ru:143/imap/notls}',
-		'email' => '',
-		'password' => '',
-		'organization' => 'Organization name',
+    return array(
+        'connectionString' => '{imap.yandex.ru:143/imap/notls}',
+        'email' => '',
+        'password' => '',
+        'organization' => 'Organization name',
         'newTaskAnswer' => '
             Уважаемый клиент!<br><br>
             Благодарим  Вас за обращение в службу поддержки %s.<br><br>
@@ -12,4 +12,4 @@
             Обращаем Ваше внимание на время работы службы поддержки:<br>
             c 08:00 до 17:00 по Московскому времени, кроме выходных и праздничных дней.<br><br>
             %s'
-	);
+    );
