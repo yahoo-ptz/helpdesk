@@ -2,32 +2,15 @@
 
 class HelpDesk {
 	const STATUS_UNSEEN = 'UNSEEN';
-	private $connctionString = '';
-	private $email = '';
-	private $password = '';
-	private $organization = '';
-	private static $newTaskAnswer = '
-		Уважаемый клиент!<br><br>
-		Благодарим  Вас за обращение в службу поддержки %s.<br><br>
-		Вашей заявке присвоен номер %d.<br>
-		Наш специалист свяжется с Вами в ближайшее время.<br>
-		Обращаем Ваше внимание на время работы службы поддержки:<br>
-		c 08:00 до 17:00 по Московскому времени, кроме выходных и праздничных дней.<br><br>
-		%s';
+	private $_config = array();
 
-	public function __construct ($connctionString, $email, $password) {
-		$this->connctionString = $connctionString;
-		$this->email = $email;
-		$this->password = $password;
-	}
-
-	public function setOrganization($organization) {
-		$this->organization = $organization;
+	public function __construct ($configPath) {
+        $this->_config = include($configPath);
 	}
 
 	public function checkMessages($type = self::STATUS_UNSEEN) {
-		$mbox = imap_open($this->connctionString, $this->email, $this->password);
-		if (!$mbox) {
+		$mbox = imap_open($this->_config['connctionString'], $this->_config['email'], $this->_config['password']);
+        if (!$mbox) {
 			throw new Exception('Connection error.');
 		}
 		$unseenEmails = imap_search($mbox, $type);
@@ -64,9 +47,9 @@ class HelpDesk {
 		$to = $header->from[0]->mailbox . '@' . $header->from[0]->host;
 		$taskId = $this->createTask($uid, $header, $body);
 		$subject = sprintf('[Task #%d] Ваша заявка приянта', $taskId);
-		$text = sprintf(self::$newTaskAnswer, $this->organization, $taskId, quoted_printable_decode($body));
+		$text = sprintf($this->_config['newTaskAnswer'], $this->_config['organization'], $taskId, quoted_printable_decode($body));
 
-		if(!imap_mail($to, $subject, $text, 'From: ' . $this->email)) {
+		if(!imap_mail($to, $subject, $text, 'From: ' . $this->_config['email'])) {
 			throw new Exception('registerNewTask: Send msg error.');
 		} 
 	} 
