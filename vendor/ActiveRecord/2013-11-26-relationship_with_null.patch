@@ -1,0 +1,20 @@
+diff --git a/protected/vendor/ActiveRecord/lib/Serialization.php b/protected/vendor/ActiveRecord/lib/Serialization.php
+index fd3e179..7118c79 100644
+--- a/protected/vendor/ActiveRecord/lib/Serialization.php
++++ b/protected/vendor/ActiveRecord/lib/Serialization.php
+@@ -175,8 +175,13 @@ abstract class Serialization
+ 
+ 					if (!is_array($assoc))
+ 					{
+-						$serialized = new $serializer_class($assoc, $options);
+-						$this->attributes[$association] = $serialized->to_a();;
++                        if ($assoc instanceof Model) {
++                            $serialized = new $serializer_class($assoc, $options);
++                            $this->attributes[$association] = $serialized->to_a();;
++                        } else {
++                            $this->attributes[$association] = null;
++
++                        }
+ 					}
+ 					else
+ 					{
